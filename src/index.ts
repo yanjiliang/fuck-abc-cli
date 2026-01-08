@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
+import axios from 'axios';
 import { configManager, ConfigManager } from './config/config';
 import { createProvider } from './ai/provider';
 import { Optimizer } from './core/optimizer';
@@ -12,6 +13,8 @@ import { HistoryLogger } from './history/logger';
 import { CustomPromptLoader } from './prompts/custom';
 import { OptimizationMode } from './types';
 import { displayWelcome, displayError, displayInfo } from './utils/display';
+
+const PACKAGE_NAME = 'english-optimizer-cli';
 
 const program = new Command();
 
@@ -260,6 +263,44 @@ program
         inPlace: options.inPlace,
         outputSuffix: options.suffix,
       });
+    } catch (error) {
+      displayError(error as Error);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('update')
+  .description('Update to the latest version')
+  .action(async () => {
+    try {
+      console.log(chalk.cyan('\n🔄 Checking for updates...\n'));
+
+      // Get current version
+      const { version: currentVersion } = require('../package.json');
+
+      // Fetch latest version from npm
+      try {
+        const response = await axios.get(`https://registry.npmjs.org/${PACKAGE_NAME}/latest`);
+        const latestVersion = response.data.version;
+
+        console.log(chalk.gray(`Current version: ${currentVersion}`));
+        console.log(chalk.gray(`Latest version: ${latestVersion}\n`));
+
+        if (currentVersion === latestVersion) {
+          console.log(chalk.green('✅ You are already using the latest version!\n'));
+        } else {
+          console.log(chalk.yellow('⚠️  A new version is available!\n'));
+          console.log(chalk.cyan('To update, run:'));
+          console.log(chalk.white.bold('  npm update -g english-optimizer-cli\n'));
+          console.log(chalk.gray('Or reinstall:'));
+          console.log(chalk.gray('  npm install -g english-optimizer-cli@latest\n'));
+        }
+      } catch (error) {
+        console.log(chalk.yellow('⚠️  Could not check for updates.\n'));
+        console.log(chalk.gray('Please check manually:'));
+        console.log(chalk.gray('  npm view english-optimizer-cli version\n'));
+      }
     } catch (error) {
       displayError(error as Error);
       process.exit(1);

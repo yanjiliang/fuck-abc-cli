@@ -1,0 +1,46 @@
+# Source files
+src/
+*.ts
+*.map
+
+# Config files
+.env
+.env.example
+tsconfig.json
+.prettierrc
+
+# Development files
+.git/
+.gitignore
+.github/
+.DS_Store
+
+# Scripts
+scripts/
+
+# Documentation
+README.md
+TRANSLATION_PROMPT_EXAMPLE.md
+
+# Logs
+*.log
+npm-debug.log*
+
+# Tests (if any)
+test/
+tests/
+*.test.ts
+
+# Build artifacts that shouldn't be published (we only want dist/)
+.history/
+coverage/
+*.tsbuildinfo
+
+# Keep important files
+!dist/
+!package.json
+!package-lock.json
+!config.yaml
+!prompt.yaml
+!docker-compose.yml
+!README.md
