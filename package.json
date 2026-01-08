@@ -1,6 +1,6 @@
 {
   "name": "english-optimizer-cli",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "CLI tool to help non-native English speakers improve their writing using AI",
   "main": "dist/index.js",
   "bin": {
