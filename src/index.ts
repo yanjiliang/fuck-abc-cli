@@ -314,4 +314,17 @@ program
     }
   });
 
+program
+  .command('test')
+  .description('Test API configuration and connection')
+  .action(async () => {
+    try {
+      const { testConfiguration } = await import('./config/test');
+      await testConfiguration();
+    } catch (error) {
+      displayError(error as Error);
+      process.exit(1);
+    }
+  });
+
 program.parse();

@@ -220,7 +220,17 @@ fuck-abc config
 
 # Run interactive setup wizard
 fuck-abc config --setup
+
+# Test API configuration
+fuck-abc test
 ```
+
+The test command will:
+
+- Verify your API configuration is valid
+- Test connection to the API provider
+- Run a simple optimization test
+- Show detailed error messages if something is wrong
 
 The setup wizard will guide you through:
 
