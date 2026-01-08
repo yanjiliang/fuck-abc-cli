@@ -181,5 +181,5 @@ export async function runConfigWizard(): Promise<void> {
   console.log(chalk.gray('─'.repeat(50)));
 
   console.log(chalk.green('\n🎉 Ready to use! Run:'));
-  console.log(chalk.white.bold('  fuck-abc\n'));
+  console.log(chalk.white.bold('  cao\n'));
 }

@@ -38,7 +38,7 @@ export async function testConfiguration(): Promise<void> {
         console.log(chalk.cyan('💡 To fix:'));
         console.log(chalk.white('  1. Visit https://open.bigmodel.cn/usercenter/finance'));
         console.log(chalk.white('  2. Recharge your account'));
-        console.log(chalk.white('  3. Run test again: fuck-abc test\n'));
+        console.log(chalk.white('  3. Run test again: cao test\n'));
         process.exit(1);
       }
       throw e;
@@ -68,12 +68,12 @@ export async function testConfiguration(): Promise<void> {
           console.log(chalk.gray('  - Model may not be available'));
           console.log(chalk.gray('  - API endpoint may have changed'));
           console.log('\n' + chalk.cyan('Please check your API configuration:'));
-          console.log(chalk.white('  fuck-abc config --setup\n'));
+          console.log(chalk.white('  cao config --setup\n'));
         }
       } else {
         console.log(chalk.green.bold('🎉 Your local Ollama is ready!\n'));
         console.log(chalk.gray('You can start using:'));
-        console.log(chalk.white.bold('  fuck-abc\n'));
+        console.log(chalk.white.bold('  cao\n'));
       }
     } else {
       console.log(chalk.red.bold('❌ API configuration is invalid!\n'));
@@ -92,9 +92,9 @@ export async function testConfiguration(): Promise<void> {
         console.log(chalk.gray('  - API URL is incorrect'));
         console.log(chalk.gray('  - Network connection failed'));
         console.log('\n' + chalk.cyan('Please check your configuration:'));
-        console.log(chalk.white('  fuck-abc config --setup'));
+        console.log(chalk.white('  cao config --setup'));
         console.log(chalk.gray('\nOr view current config:'));
-        console.log(chalk.white('  fuck-abc config\n'));
+        console.log(chalk.white('  cao config\n'));
       }
 
       process.exit(1);
