@@ -15,13 +15,14 @@ import { OptimizationMode } from './types';
 import { displayWelcome, displayError, displayInfo } from './utils/display';
 
 const PACKAGE_NAME = 'english-optimizer-cli';
+const PACKAGE_VERSION = require('../package.json').version;
 
 const program = new Command();
 
 program
   .name('fuck-abc')
   .description('CLI tool to help non-native English speakers improve their writing using AI')
-  .version('1.0.0');
+  .version(PACKAGE_VERSION);
 
 program
   .command('start', { isDefault: true })
