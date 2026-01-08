@@ -1,0 +1,38 @@
+# English Optimizer CLI Configuration
+# Copy this file to ~/.english-optimizer/config.yaml to customize
+
+# AI Provider Configuration
+# Options: 'ollama' for local or 'api' for cloud API
+ai:
+  provider: 'ollama' # or 'api'
+
+  # Ollama Configuration (when provider: 'ollama')
+  ollama:
+    baseUrl: 'http://localhost:11434'
+    model: 'llama3.2:3b'
+
+  # API Configuration (when provider: 'api')
+  api:
+    provider: 'openai' # Options: 'openai', 'glm', 'custom'
+    apiKey: '' # Your API key
+    baseUrl: 'https://api.openai.com/v1'
+    model: 'gpt-3.5-turbo'
+
+# Hotkey mappings for interactive mode
+hotkeys:
+  professional: 'p'
+  concise: 'c'
+  grammar: 'g'
+  senior_developer: 'd'
+  reset: 'r'
+  history: 'h'
+  quit: 'q'
+
+# Feature settings
+features:
+  enableHistory: true
+  historyPath: ~/.english-optimizer/history.json
+  enableCustomPrompts: true
+  customPromptsPath: ~/.english-optimizer/prompts.json
+  useYAMLPrompt: true # Enable YAML prompt configuration from prompt.yaml
+

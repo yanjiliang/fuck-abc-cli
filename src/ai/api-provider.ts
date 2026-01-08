@@ -1,0 +1,162 @@
+import axios, { AxiosError } from 'axios';
+import { AIProvider, OptimizationMode } from '../types';
+import { getPromptTemplate } from '../prompts/templates';
+
+export interface ApiProviderConfig {
+  provider: 'openai' | 'glm' | 'custom';
+  apiKey: string;
+  baseUrl: string;
+  model: string;
+}
+
+export class ApiProvider implements AIProvider {
+  private config: ApiProviderConfig;
+
+  constructor(config: ApiProviderConfig) {
+    this.config = config;
+  }
+
+  async optimize(text: string, mode: OptimizationMode): Promise<string> {
+    const prompt = getPromptTemplate(mode, text);
+
+    try {
+      const response = await axios.post(
+        `${this.config.baseUrl}/chat/completions`,
+        {
+          model: this.config.model,
+          messages: [
+            {
+              role: 'user',
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+          max_tokens: 2000,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          timeout: 60000, // 60 seconds timeout
+        }
+      );
+
+      if (response.data && response.data.choices && response.data.choices.length > 0) {
+        let result = response.data.choices[0].message.content.trim();
+
+        // Remove quotes if the model wrapped the response in them
+        if (result.startsWith('"') && result.endsWith('"')) {
+          result = result.slice(1, -1);
+        }
+
+        // Remove common prefixes if present
+        const prefixesToRemove = ['Rewritten text:', 'Corrected text:', 'Optimized text:'];
+        for (const prefix of prefixesToRemove) {
+          if (result.startsWith(prefix)) {
+            result = result.slice(prefix.length).trim();
+          }
+        }
+
+        return result;
+      }
+
+      throw new Error('Invalid response from API');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+          const status = axiosError.response.status;
+          if (status === 401) {
+            throw new Error('Invalid API key. Please check your API credentials.');
+          } else if (status === 429) {
+            throw new Error('Rate limit exceeded. Please try again later.');
+          }
+        }
+        throw new Error(`API error: ${axiosError.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async generateWithPrompt(prompt: string): Promise<string> {
+    try {
+      const response = await axios.post(
+        `${this.config.baseUrl}/chat/completions`,
+        {
+          model: this.config.model,
+          messages: [
+            {
+              role: 'user',
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+          max_tokens: 2000,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          timeout: 60000,
+        }
+      );
+
+      if (response.data && response.data.choices && response.data.choices.length > 0) {
+        let result = response.data.choices[0].message.content.trim();
+
+        // Remove quotes if the model wrapped the response in them
+        if (result.startsWith('"') && result.endsWith('"')) {
+          result = result.slice(1, -1);
+        }
+
+        return result;
+      }
+
+      throw new Error('Invalid response from API');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+          const status = axiosError.response.status;
+          if (status === 401) {
+            throw new Error('Invalid API key. Please check your API credentials.');
+          } else if (status === 429) {
+            throw new Error('Rate limit exceeded. Please try again later.');
+          }
+        }
+        throw new Error(`API error: ${axiosError.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async isAvailable(): Promise<boolean> {
+    if (!this.config.apiKey) {
+      return false;
+    }
+
+    try {
+      // Try a simple API call to check if the key is valid
+      const response = await axios.post(
+        `${this.config.baseUrl}/chat/completions`,
+        {
+          model: this.config.model,
+          messages: [{ role: 'user', content: 'test' }],
+          max_tokens: 5,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.config.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000,
+        }
+      );
+      return response.status === 200;
+    } catch {
+      return false;
+    }
+  }
+}
