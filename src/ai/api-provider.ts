@@ -17,79 +17,43 @@ export class ApiProvider implements AIProvider {
     this.config = config;
   }
 
+  private handleApiError(error: any): never {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        const status = axiosError.response.status;
+        const data: any = axiosError.response.data;
+
+        // Handle GLM specific errors
+        if (data?.error?.code === '1113') {
+          throw new Error(
+            'GLM account balance is insufficient. Please recharge your account at https://open.bigmodel.cn/usercenter/finance'
+          );
+        }
+
+        if (status === 401) {
+          throw new Error('Invalid API key. Please check your API credentials.');
+        } else if (status === 429) {
+          throw new Error('Rate limit exceeded. Please try again later.');
+        }
+      }
+      throw new Error(`API error: ${axiosError.message}`);
+    }
+    throw error;
+  }
+
   async optimize(text: string, mode: OptimizationMode): Promise<string> {
     const prompt = getPromptTemplate(mode, text);
-
-    try {
-      const response = await axios.post(
-        `${this.config.baseUrl}/chat/completions`,
-        {
-          model: this.config.model,
-          messages: [
-            {
-              role: 'user',
-              content: prompt,
-            },
-          ],
-          temperature: 0.7,
-          max_tokens: 2000,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${this.config.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          timeout: 60000, // 60 seconds timeout
-        }
-      );
-
-      if (response.data && response.data.choices && response.data.choices.length > 0) {
-        let result = response.data.choices[0].message.content.trim();
-
-        // Remove quotes if model wrapped the response in them
-        if (result.startsWith('"') && result.endsWith('"')) {
-          result = result.slice(1, -1);
-        }
-
-        // Remove common prefixes if present
-        const prefixesToRemove = ['Rewritten text:', 'Corrected text:', 'Optimized text:'];
-        for (const prefix of prefixesToRemove) {
-          if (result.startsWith(prefix)) {
-            result = result.slice(prefix.length).trim();
-          }
-        }
-
-        return result;
-      }
-
-      throw new Error('Invalid response from API');
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
-        if (axiosError.response) {
-          const status = axiosError.response.status;
-          const data: any = axiosError.response.data;
-
-          // Handle GLM specific errors
-          if (data?.error?.code === '1113') {
-            throw new Error(
-              'GLM account balance is insufficient. Please recharge your account at https://open.bigmodel.cn/usercenter/finance'
-            );
-          }
-
-          if (status === 401) {
-            throw new Error('Invalid API key. Please check your API credentials.');
-          } else if (status === 429) {
-            throw new Error('Rate limit exceeded. Please try again later.');
-          }
-        }
-        throw new Error(`API error: ${axiosError.message}`);
-      }
-      throw error;
-    }
+    const result = await this.callAPI(prompt);
+    return this.cleanupResponse(result, true);
   }
 
   async generateWithPrompt(prompt: string): Promise<string> {
+    const result = await this.callAPI(prompt);
+    return this.cleanupResponse(result, false);
+  }
+
+  private async callAPI(prompt: string): Promise<string> {
     try {
       const response = await axios.post(
         `${this.config.baseUrl}/chat/completions`,
@@ -114,41 +78,33 @@ export class ApiProvider implements AIProvider {
       );
 
       if (response.data && response.data.choices && response.data.choices.length > 0) {
-        let result = response.data.choices[0].message.content.trim();
-
-        // Remove quotes if model wrapped the response in them
-        if (result.startsWith('"') && result.endsWith('"')) {
-          result = result.slice(1, -1);
-        }
-
-        return result;
+        return response.data.choices[0].message.content.trim();
       }
 
       throw new Error('Invalid response from API');
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
-        if (axiosError.response) {
-          const status = axiosError.response.status;
-          const data: any = axiosError.response.data;
-
-          // Handle GLM specific errors
-          if (data?.error?.code === '1113') {
-            throw new Error(
-              'GLM account balance is insufficient. Please recharge your account at https://open.bigmodel.cn/usercenter/finance'
-            );
-          }
-
-          if (status === 401) {
-            throw new Error('Invalid API key. Please check your API credentials.');
-          } else if (status === 429) {
-            throw new Error('Rate limit exceeded. Please try again later.');
-          }
-        }
-        throw new Error(`API error: ${axiosError.message}`);
-      }
-      throw error;
+      this.handleApiError(error);
     }
+  }
+
+  private cleanupResponse(result: string, removePrefixes: boolean): string {
+    // Remove quotes if model wrapped the response in them
+    if (result.startsWith('"') && result.endsWith('"')) {
+      result = result.slice(1, -1);
+    }
+
+    // Remove common prefixes if present
+    if (removePrefixes) {
+      const prefixesToRemove = ['Rewritten text:', 'Corrected text:', 'Optimized text:'];
+      for (const prefix of prefixesToRemove) {
+        if (result.startsWith(prefix)) {
+          result = result.slice(prefix.length).trim();
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
   async isAvailable(): Promise<boolean> {

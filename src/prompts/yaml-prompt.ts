@@ -1,6 +1,5 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { homedir } from 'os';
 import * as yaml from 'js-yaml';
 import type { YAMLPromptConfig } from '../types';
 

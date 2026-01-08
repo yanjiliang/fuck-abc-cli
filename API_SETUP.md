@@ -159,10 +159,10 @@ API_MODEL=deepseek-chat
 
 ```bash
 # 检查配置
-fuck-abc config
+cao config
 
 # 启动CLI测试
-fuck-abc
+cao
 ```
 
 ## 切换回本地LLM

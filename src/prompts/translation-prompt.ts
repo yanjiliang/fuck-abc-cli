@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'fs';
+import { join, dirname } from 'path';
 import { homedir } from 'os';
 
 export class TranslationPromptLoader {
@@ -44,11 +44,8 @@ Do not include any explanations, notes, or additional text.`;
   }
 
   private createDefaultPromptFile(): void {
-    const { dirname } = require('path');
-    const { mkdirSync, writeFileSync } = require('fs');
-
-    const dir = require('path').dirname(this.promptPath);
-    if (!require('fs').existsSync(dir)) {
+    const dir = dirname(this.promptPath);
+    if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
 

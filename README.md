@@ -1,5 +1,7 @@
 # English Optimizer CLI
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 A powerful CLI tool to help non-native English speakers improve their writing using AI. Simply type your text and use hotkeys to instantly optimize it in different styles!
 
 ## Features
@@ -73,21 +75,13 @@ You can also customize the translation/optimization behavior using a text-based 
 ### View Current Prompt
 
 ```bash
-fuck-abc prompt --show
+cao prompt --show
 ```
 
 ### Edit Prompt Template
 
 ```bash
-fuck-abc prompt --edit
-# Or edit directly
-code ~/.english-optimizer/translation-prompt.txt
-```
-
-### Edit Prompt Template
-
-```bash
-english-opt prompt --edit
+cao prompt --edit
 # Or edit directly
 code ~/.english-optimizer/translation-prompt.txt
 ```
@@ -125,7 +119,6 @@ See `TRANSLATION_PROMPT_EXAMPLE.md` for more examples.
 ### 1. Clone and Install
 
 ```bash
-cd /Users/laosi/Documents/repos/english-optimizer-cli
 npm install
 ```
 
@@ -150,7 +143,7 @@ npm run build
 ```bash
 npm start
 # or
-fuck-abc
+cao
 ```
 
 ## Usage
@@ -160,7 +153,7 @@ fuck-abc
 Just run the CLI and start typing! Press **Cmd+key** to instantly optimize:
 
 ```bash
-fuck-abc
+cao
 # or
 npm start
 ```
@@ -184,7 +177,7 @@ npm start
 If you prefer to submit text first, then choose optimizations:
 
 ```bash
-fuck-abc --classic
+cao --classic
 # or
 npm start -- --classic
 ```
@@ -202,27 +195,27 @@ npm start -- --classic
 ### View History
 
 ```bash
-fuck-abc history
-fuck-abc history -n 5  # Show last 5 entries
+cao history
+cao history -n 5  # Show last 5 entries
 ```
 
 ### List Custom Prompts
 
 ```bash
-fuck-abc prompts
+cao prompts
 ```
 
 ### Check Configuration
 
 ```bash
 # Show current configuration
-fuck-abc config
+cao config
 
 # Run interactive setup wizard
-fuck-abc config --setup
+cao config --setup
 
 # Test API configuration
-fuck-abc test
+cao test
 ```
 
 The test command will:
@@ -237,73 +230,6 @@ The setup wizard will guide you through:
 - Choosing AI provider (local Ollama or cloud API)
 - Configuring API settings
 - Setting up preferences
-
-### Using Cloud APIs (OpenAI, GLM, DeepSeek, etc.)
-
-## YAML Prompt Configuration
-
-The CLI supports YAML-based prompt configuration for more advanced customization.
-
-### Using YAML Prompts
-
-Create a `prompt.yaml` file in your project root (or any directory where you run the CLI):
-
-```yaml
-role:
-  name: Native English Full-Stack Engineer Coach
-  description: >
-    You are a senior full-stack software engineer who is a native English speaker.
-    You have strong experience in frontend, backend, system design, and real-world
-    engineering collaboration.
-
-goals:
-  - Help the user learn natural, spoken English used by software engineers
-  - Translate the user's input into idiomatic, native-level English
-  - Optimize wording to sound natural, confident, and professional
-
-user_profile:
-  background: Software Engineer
-  native_language: Chinese
-  learning_goal: Improve practical English for daily engineering communication
-
-instructions:
-  - Always assume the user wants to improve their English, not just get a literal translation
-  - Rewrite the input in a way a native English-speaking engineer would naturally say it
-  - Prefer conversational, work-friendly language over academic or overly formal English
-  - Keep sentences concise and clear, like real team communication
-
-output_format:
-  style: >
-    Natural, spoken English commonly used in engineering teams.
-    Sounds like real conversations in meetings, Slack, or code reviews.
-
-examples:
-  - input: '这个需求我已经完成了，但是还需要再测试一下'
-    output: "I've finished this feature, but I still need to do some more testing."
-
-  - input: '这个问题我稍后再跟进'
-    output: "I'll follow up on this later."
-
-constraints:
-  - Do not over-explain unless the user explicitly asks
-  - Do not change the original meaning
-  - Do not use overly complex vocabulary unless it fits real engineering conversations
-```
-
-### Managing YAML Prompts
-
-```bash
-# Check if YAML prompt is detected
-fuck-abc prompt
-
-# Show current YAML prompt configuration
-fuck-abc prompt --show
-
-# Edit YAML prompt file
-fuck-abc prompt --edit
-```
-
-The CLI automatically detects `prompt.yaml` in the current directory and uses it for translation/optimization.
 
 ## Configuration
 
@@ -335,8 +261,6 @@ API_MODEL=gpt-4o
 ```
 
 For detailed API configuration instructions, see [API_SETUP.md](API_SETUP.md)
-
-### Config File
 
 ### Environment Variables
 

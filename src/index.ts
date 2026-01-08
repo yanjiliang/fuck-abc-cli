@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import axios from 'axios';
+import { execSync } from 'child_process';
 import { configManager, ConfigManager } from './config/config';
 import { createProvider } from './ai/provider';
 import { Optimizer } from './core/optimizer';
@@ -12,15 +13,16 @@ import { BatchProcessor } from './core/batch';
 import { HistoryLogger } from './history/logger';
 import { CustomPromptLoader } from './prompts/custom';
 import { OptimizationMode } from './types';
-import { displayWelcome, displayError, displayInfo } from './utils/display';
+import { displayError, displayInfo } from './utils/display';
+import packageJson from '../package.json';
 
 const PACKAGE_NAME = 'english-optimizer-cli';
-const PACKAGE_VERSION = require('../package.json').version;
+const PACKAGE_VERSION = packageJson.version;
 
 const program = new Command();
 
 program
-  .name('fuck-abc')
+  .name('cao')
   .description('CLI tool to help non-native English speakers improve their writing using AI')
   .version(PACKAGE_VERSION);
 
@@ -195,7 +197,6 @@ program
           console.log('─'.repeat(70));
         }
       } else if (options.edit) {
-        const { execSync } = require('child_process');
         const promptPath = hasYAMLPrompt
           ? yamlPromptLoader.getPromptPath()
           : textPromptLoader.getPromptPath();
@@ -214,8 +215,8 @@ program
           console.log(`\n📄 Prompt file location: ${textPromptLoader.getPromptPath()}`);
         }
         console.log(chalk.gray('\nCommands:'));
-        console.log('  fuck-abc prompt --show    Show current prompt');
-        console.log('  fuck-abc prompt --edit    Edit prompt file');
+        console.log('  cao prompt --show    Show current prompt');
+        console.log('  cao prompt --edit    Edit prompt file');
         console.log(chalk.gray('\nEdit the file directly to customize translation behavior.\n'));
       }
     } catch (error) {
@@ -284,7 +285,7 @@ program
       console.log(chalk.cyan('\n🔄 Checking for updates...\n'));
 
       // Get current version
-      const { version: currentVersion } = require('../package.json');
+      const currentVersion = packageJson.version;
 
       // Fetch latest version from npm
       try {
@@ -303,7 +304,7 @@ program
           console.log(chalk.gray('Or reinstall:'));
           console.log(chalk.gray('  npm install -g english-optimizer-cli@latest\n'));
         }
-      } catch (error) {
+      } catch {
         console.log(chalk.yellow('⚠️  Could not check for updates.\n'));
         console.log(chalk.gray('Please check manually:'));
         console.log(chalk.gray('  npm view english-optimizer-cli version\n'));

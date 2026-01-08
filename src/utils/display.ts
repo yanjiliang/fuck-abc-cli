@@ -14,17 +14,9 @@ export function displayModeInfo(mode: OptimizationMode): void {
 }
 
 export function displayOptimization(original: string, optimized: string): void {
-  console.log(chalk.gray('\n' + '─'.repeat(60)));
-
-  // Show original
-  console.log(chalk.red('\n❌ Original:'));
-  console.log(chalk.gray(original));
-
-  // Show optimized
-  console.log(chalk.green('\n✅ Optimized:'));
-  console.log(chalk.white(optimized));
-
-  console.log(chalk.gray('\n' + '─'.repeat(60)));
+  displaySeparator();
+  displayOriginalAndOptimized(original, optimized);
+  displaySeparator();
 }
 
 export function displayDiff(original: string, optimized: string): void {
@@ -52,10 +44,6 @@ export function displayInfo(message: string): void {
   console.log(chalk.cyan('\nℹ️'), chalk.white(message));
 }
 
-export function displayWarning(message: string): void {
-  console.log(chalk.yellow('\n⚠️'), chalk.white(message));
-}
-
 export function displayHelp(): void {
   console.log(chalk.cyan('\n📖 Hotkeys:\n'));
   console.log(chalk.gray('  Ctrl+P - Professional tone'));
@@ -74,16 +62,22 @@ export function displayHistoryEntry(entry: {
   mode: OptimizationMode;
   timestamp: Date;
 }): void {
-  console.log(chalk.gray('\n' + '─'.repeat(60)));
+  displaySeparator();
   console.log(chalk.cyan(`\nID: ${entry.id}`));
   console.log(chalk.gray(`Time: ${entry.timestamp.toLocaleString()}`));
   console.log(chalk.yellow(`Mode: ${getModeInfo(entry.mode).name}`));
+  displayOriginalAndOptimized(entry.original, entry.optimized);
+  displaySeparator();
+}
 
-  console.log(chalk.red('\n❌ Original:'));
-  console.log(chalk.gray(entry.original));
-
-  console.log(chalk.green('\n✅ Optimized:'));
-  console.log(chalk.white(entry.optimized));
-
+// Helper functions
+function displaySeparator(): void {
   console.log(chalk.gray('\n' + '─'.repeat(60)));
+}
+
+function displayOriginalAndOptimized(original: string, optimized: string): void {
+  console.log(chalk.red('\n❌ Original:'));
+  console.log(chalk.gray(original));
+  console.log(chalk.green('\n✅ Optimized:'));
+  console.log(chalk.white(optimized));
 }

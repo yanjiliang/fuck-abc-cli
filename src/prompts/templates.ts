@@ -54,10 +54,6 @@ export function getPromptTemplate(mode: OptimizationMode, text: string): string 
   return PROMPT_TEMPLATES[mode].template(text);
 }
 
-export function getAllModes(): OptimizationMode[] {
-  return Object.values(OptimizationMode);
-}
-
 export function getModeInfo(mode: OptimizationMode): PromptTemplate {
   return PROMPT_TEMPLATES[mode];
 }

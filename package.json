@@ -1,16 +1,23 @@
 {
   "name": "english-optimizer-cli",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "CLI tool to help non-native English speakers improve their writing using AI",
   "main": "dist/index.js",
   "bin": {
-    "fuck-abc": "./dist/index.js"
+    "cao": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "watch": "tsc --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
     "install-config": "node scripts/install-config.js",
     "version": "node scripts/bump-version.js",
     "release:patch": "npm version patch && git push && git push --tags",
@@ -24,33 +31,38 @@
     "ai",
     "optimizer"
   ],
-  "author": "",
+  "author": "laosi",
   "license": "MIT",
   "dependencies": {
-    "axios": "^1.6.0",
+    "axios": "^1.7.9",
     "chalk": "^5.3.0",
-    "cli-cursor": "^4.0.0",
-    "clipboardy": "^3.0.0",
-    "commander": "^12.0.0",
-    "diff": "^5.1.0",
-    "dotenv": "^16.3.0",
-    "inquirer": "^9.2.0",
+    "cli-cursor": "^5.0.0",
+    "clipboardy": "^5.0.2",
+    "commander": "^14.0.2",
+    "diff": "^8.0.2",
+    "dotenv": "^17.2.3",
+    "inquirer": "^13.1.0",
     "js-yaml": "^4.1.0",
     "keypress": "^0.2.1",
-    "ora": "^8.0.0",
-    "uuid": "^9.0.0",
-    "zod": "^3.22.0"
+    "ora": "^9.0.0",
+    "uuid": "^13.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/diff": "^5.0.0",
+    "@types/diff": "^7.0.2",
     "@types/inquirer": "^9.0.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.10.0",
-    "@types/uuid": "^9.0.0",
-    "eslint": "^8.55.0",
-    "prettier": "^3.1.0",
+    "@types/node": "^22.14.1",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "@vitest/coverage-v8": "^3.0.6",
+    "@vitest/ui": "^3.0.6",
+    "eslint": "^9.39.2",
+    "prettier": "^3.4.2",
     "ts-node": "^10.9.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.8.1",
+    "vitest": "^3.0.6"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,8 +1,6 @@
-import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { configManager } from './config';
 import { createProvider } from '../ai/provider';
-import { displayError, displaySuccess } from '../utils/display';
 
 export async function testConfiguration(): Promise<void> {
   console.log(chalk.cyan.bold('\n🧪 Testing API Configuration...\n'));

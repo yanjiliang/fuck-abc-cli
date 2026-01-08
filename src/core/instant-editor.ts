@@ -6,7 +6,7 @@ import { Optimizer } from './optimizer';
 import { HistoryLogger } from '../history/logger';
 import { TranslationPromptLoader } from '../prompts/translation-prompt';
 import { YAMLPromptLoader } from '../prompts/yaml-prompt';
-import { displayError, displaySuccess } from '../utils/display';
+import { displayError } from '../utils/display';
 
 export class InstantEditor {
   private optimizer: Optimizer;
@@ -140,7 +140,7 @@ export class InstantEditor {
     try {
       clipboardy.writeSync(optimized);
       console.log(chalk.green.bold('\n✓ 已复制到剪贴板 / Copied to clipboard!\n'));
-    } catch (error) {
+    } catch {
       console.log(chalk.yellow('\n⚠️  剪贴板复制失败 / Failed to copy to clipboard\n'));
     }
 

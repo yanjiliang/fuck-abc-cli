@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import { homedir } from 'os';
 import dotenv from 'dotenv';
 import * as yaml from 'js-yaml';
@@ -81,11 +81,9 @@ export class ConfigManager {
 
   private loadConfig(): Config {
     // Try to load from YAML config file first, then JSON
-    let configFilePath = null;
     let fileContent = '';
 
     if (existsSync(CONFIG_FILE_YAML)) {
-      configFilePath = CONFIG_FILE_YAML;
       try {
         fileContent = readFileSync(CONFIG_FILE_YAML, 'utf-8');
         const fileConfig = yaml.load(fileContent) as any;
@@ -98,7 +96,6 @@ export class ConfigManager {
     }
 
     if (existsSync(CONFIG_FILE_JSON)) {
-      configFilePath = CONFIG_FILE_JSON;
       try {
         fileContent = readFileSync(CONFIG_FILE_JSON, 'utf-8');
         const fileConfig = JSON.parse(fileContent);
