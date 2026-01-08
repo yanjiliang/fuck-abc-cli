@@ -290,6 +290,32 @@ The CLI can be configured via:
 1. **Environment Variables** (`.env` file)
 2. **Config File** (`~/.english-optimizer/config.yaml` or `~/.english-optimizer/config.json`)
 
+### Using Cloud APIs (OpenAI, GLM, DeepSeek, etc.)
+
+By default, the CLI uses local Ollama. To use cloud APIs, you need to configure them.
+
+**Quick Setup:**
+
+1. Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` with your API configuration:
+
+```env
+AI_PROVIDER=api
+API_PROVIDER=openai  # or 'glm', 'custom'
+API_KEY=your_api_key_here
+API_BASE_URL=https://api.openai.com/v1
+API_MODEL=gpt-4o
+```
+
+For detailed API configuration instructions, see [API_SETUP.md](API_SETUP.md)
+
+### Config File
+
 ### Environment Variables
 
 Copy `.env.example` to `.env`:

@@ -13,10 +13,40 @@ ai:
 
   # API Configuration (when provider: 'api')
   api:
-    provider: 'openai' # Options: 'openai', 'glm', 'custom'
-    apiKey: '' # Your API key
+    # Provider type: 'openai', 'glm', or 'custom'
+    provider: 'openai'
+
+    # Your API key (get from your API provider's dashboard)
+    apiKey: ''
+
+    # API endpoint URL
     baseUrl: 'https://api.openai.com/v1'
+
+    # Model name to use
     model: 'gpt-3.5-turbo'
+
+    # OpenAI Examples:
+    # - apiKey: 'sk-xxx'
+    # - baseUrl: 'https://api.openai.com/v1'
+    # - model: 'gpt-4o' or 'gpt-4o-mini' or 'gpt-3.5-turbo'
+
+    # GLM (Zhipu AI) Examples:
+    # - provider: 'glm'
+    # - apiKey: 'your-glm-key'
+    # - baseUrl: 'https://open.bigmodel.cn/api/paas/v4'
+    # - model: 'glm-4' or 'glm-4-flash'
+
+    # DeepSeek Examples:
+    # - provider: 'custom'
+    # - apiKey: 'your-deepseek-key'
+    # - baseUrl: 'https://api.deepseek.com/v1'
+    # - model: 'deepseek-chat'
+
+    # Aliyun Qwen Examples:
+    # - provider: 'custom'
+    # - apiKey: 'your-qwen-key'
+    # - baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1'
+    # - model: 'qwen-turbo' or 'qwen-plus'
 
 # Hotkey mappings for interactive mode
 hotkeys:
@@ -35,4 +65,3 @@ features:
   enableCustomPrompts: true
   customPromptsPath: ~/.english-optimizer/prompts.json
   useYAMLPrompt: true # Enable YAML prompt configuration from prompt.yaml
-
