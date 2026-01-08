@@ -215,8 +215,20 @@ fuck-abc prompts
 ### Check Configuration
 
 ```bash
+# Show current configuration
 fuck-abc config
+
+# Run interactive setup wizard
+fuck-abc config --setup
 ```
+
+The setup wizard will guide you through:
+
+- Choosing AI provider (local Ollama or cloud API)
+- Configuring API settings
+- Setting up preferences
+
+### Using Cloud APIs (OpenAI, GLM, DeepSeek, etc.)
 
 ## YAML Prompt Configuration
 

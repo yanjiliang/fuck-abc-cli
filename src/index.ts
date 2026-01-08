@@ -116,11 +116,17 @@ program
 
 program
   .command('config')
-  .description('Show current configuration')
-  .action(() => {
+  .description('Show current configuration or run setup wizard')
+  .option('-s, --setup', 'Run interactive setup wizard', false)
+  .action(async (options) => {
     try {
-      const config = configManager.getConfig();
-      console.log(JSON.stringify(config, null, 2));
+      if (options.setup) {
+        const { runConfigWizard } = await import('./config/wizard');
+        await runConfigWizard();
+      } else {
+        const config = configManager.getConfig();
+        console.log(JSON.stringify(config, null, 2));
+      }
     } catch (error) {
       displayError(error as Error);
       process.exit(1);
