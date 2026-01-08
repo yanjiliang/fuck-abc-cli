@@ -1,5 +1,5 @@
 {
-  "name": "fuck-abc-cli",
+  "name": "english-optimizer-cli",
   "version": "1.0.0",
   "description": "CLI tool to help non-native English speakers improve their writing using AI",
   "main": "dist/index.js",
