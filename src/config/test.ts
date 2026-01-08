@@ -30,7 +30,21 @@ export async function testConfiguration(): Promise<void> {
     console.log(chalk.gray('\n' + '─'.repeat(50) + '\n'));
     console.log(chalk.cyan('🔄 Testing connection...\n'));
 
-    const isAvailable = await provider.isAvailable();
+    let isAvailable = false;
+    try {
+      isAvailable = await provider.isAvailable();
+    } catch (e: any) {
+      if (e.message.includes('balance is insufficient')) {
+        console.log(chalk.red.bold('\n❌ GLM Account Balance Issue!\n'));
+        console.log(chalk.yellow('Your GLM account has insufficient balance.\n'));
+        console.log(chalk.cyan('💡 To fix:'));
+        console.log(chalk.white('  1. Visit https://open.bigmodel.cn/usercenter/finance'));
+        console.log(chalk.white('  2. Recharge your account'));
+        console.log(chalk.white('  3. Run test again: fuck-abc test\n'));
+        process.exit(1);
+      }
+      throw e;
+    }
 
     if (isAvailable) {
       console.log(chalk.green.bold('✅ API configuration is valid!\n'));

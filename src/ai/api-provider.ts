@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import chalk from 'chalk';
 import { AIProvider, OptimizationMode } from '../types';
 import { getPromptTemplate } from '../prompts/templates';
 
@@ -35,7 +36,7 @@ export class ApiProvider implements AIProvider {
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
+            Authorization: `Bearer ${this.config.apiKey}`,
             'Content-Type': 'application/json',
           },
           timeout: 60000, // 60 seconds timeout
@@ -45,7 +46,7 @@ export class ApiProvider implements AIProvider {
       if (response.data && response.data.choices && response.data.choices.length > 0) {
         let result = response.data.choices[0].message.content.trim();
 
-        // Remove quotes if the model wrapped the response in them
+        // Remove quotes if model wrapped the response in them
         if (result.startsWith('"') && result.endsWith('"')) {
           result = result.slice(1, -1);
         }
@@ -67,6 +68,15 @@ export class ApiProvider implements AIProvider {
         const axiosError = error as AxiosError;
         if (axiosError.response) {
           const status = axiosError.response.status;
+          const data: any = axiosError.response.data;
+
+          // Handle GLM specific errors
+          if (data?.error?.code === '1113') {
+            throw new Error(
+              'GLM account balance is insufficient. Please recharge your account at https://open.bigmodel.cn/usercenter/finance'
+            );
+          }
+
           if (status === 401) {
             throw new Error('Invalid API key. Please check your API credentials.');
           } else if (status === 429) {
@@ -96,7 +106,7 @@ export class ApiProvider implements AIProvider {
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
+            Authorization: `Bearer ${this.config.apiKey}`,
             'Content-Type': 'application/json',
           },
           timeout: 60000,
@@ -106,7 +116,7 @@ export class ApiProvider implements AIProvider {
       if (response.data && response.data.choices && response.data.choices.length > 0) {
         let result = response.data.choices[0].message.content.trim();
 
-        // Remove quotes if the model wrapped the response in them
+        // Remove quotes if model wrapped the response in them
         if (result.startsWith('"') && result.endsWith('"')) {
           result = result.slice(1, -1);
         }
@@ -120,6 +130,15 @@ export class ApiProvider implements AIProvider {
         const axiosError = error as AxiosError;
         if (axiosError.response) {
           const status = axiosError.response.status;
+          const data: any = axiosError.response.data;
+
+          // Handle GLM specific errors
+          if (data?.error?.code === '1113') {
+            throw new Error(
+              'GLM account balance is insufficient. Please recharge your account at https://open.bigmodel.cn/usercenter/finance'
+            );
+          }
+
           if (status === 401) {
             throw new Error('Invalid API key. Please check your API credentials.');
           } else if (status === 429) {
@@ -138,7 +157,7 @@ export class ApiProvider implements AIProvider {
     }
 
     try {
-      // Try a simple API call to check if the key is valid
+      // Try a simple API call to check if key is valid
       const response = await axios.post(
         `${this.config.baseUrl}/chat/completions`,
         {
@@ -148,14 +167,38 @@ export class ApiProvider implements AIProvider {
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
+            Authorization: `Bearer ${this.config.apiKey}`,
             'Content-Type': 'application/json',
           },
           timeout: 10000,
         }
       );
       return response.status === 200;
-    } catch {
+    } catch (error: any) {
+      if (error.response) {
+        console.log(
+          '\n' + chalk.yellow('API connection failed with status:'),
+          error.response.status
+        );
+        if (error.response.data) {
+          console.log(chalk.yellow('Error details:'), JSON.stringify(error.response.data));
+
+          // Throw error for GLM balance issues
+          if (error.response.data?.error?.code === '1113') {
+            throw new Error(
+              'GLM account balance is insufficient. Please recharge your account at https://open.bigmodel.cn/usercenter/finance'
+            );
+          }
+        }
+      } else if (error.request) {
+        console.log('\n' + chalk.yellow('No response from API'));
+        console.log(chalk.gray('Possible issues:'));
+        console.log(chalk.gray('  - Network connectivity'));
+        console.log(chalk.gray('  - API URL is incorrect'));
+        console.log(chalk.gray('  - Firewall blocking the request'));
+      } else {
+        console.log('\n' + chalk.yellow('Request setup error:'), error.message);
+      }
       return false;
     }
   }
